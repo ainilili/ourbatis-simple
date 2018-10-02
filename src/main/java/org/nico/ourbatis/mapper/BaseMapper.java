@@ -2,7 +2,7 @@ package org.nico.ourbatis.mapper;
 
 import java.util.List;
 
-public interface BaseDao<T,K>{
+public interface BaseMapper<T,K>{
 
     
     /**
