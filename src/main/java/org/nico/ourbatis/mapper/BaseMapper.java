@@ -10,42 +10,42 @@ public interface BaseMapper<T,K>{
      * @param  key
      * @return T
      */
-    public  T selectByPrimaryKey(K key);
+    public  T selectById(K key);
+    
+    /**
+     * 根据条件查询单条记录
+     * @param  t
+     * @return List<T>
+     */
+    public  T selectEntity(T t);
     
      /**
      * 根据条件查询多条记录
      * @param T t
      * @return List<T>
      */
-    public  List<T> selectByEntityList(T t);
-    
-     /**
-     * 根据条件查询单条记录
-     * @param  t
-     * @return List<T>
-     */
-    public  T selectByEntity(T t);
+    public  List<T> selectList(T t);
     
      /**
      * 根据条件查询ID
      * @param  t
      * @return K
      */
-     public  K selectById(T t);
+     public  K selectId(T t);
   
      /**
      * 根据条件查询ID集合
      * @param  t
      * @return List<K>
      */
-     public  List<K> selectByIds(T t);
+     public  List<K> selectIds(T t);
     
      /**
      * 根据主键删除单条记录
      * @param key
      *
      */
-    public int deleteByPrimaryKey(K key);
+    public int deleteById(K key);
     
      /**
      * 插入单条记录（全字段） 
@@ -61,26 +61,33 @@ public interface BaseMapper<T,K>{
      */
     public int insertSelective(T t);
     
+    /**
+     *  批量插入
+     * @param t
+     * @return int
+     */
+    public int insertBatch(List<T> list);
+    
      /**
      *  根据主键修改
      * @param t
      * @return int
      */
-    public int updateByPrimaryKey(T t);
+    public int update(T t);
     
-     /**
-     *  批量插入
+    /**
+     *  根据主键修改(修改不为空的)
      * @param t
      * @return int
      */
-    public int insertBatch(List<T> t);
+    public int updateSelective(T t);
     
      /**
      *  根据主键批量修改
      * @param t
      * @return int
      */
-    public int updateBatch(List<T> t);
+    public int updateBatch(List<T> list);
     
     /**
      *  根据主键批量删除
@@ -94,14 +101,8 @@ public interface BaseMapper<T,K>{
      * @param  t
      * @return int
      */
-    public int deleteByEntity(T t);
+    public int delete(T t);
 
-     /**
-     *  根据ids 查询
-     * @param  keys
-     * @return List<T>
-     */
-    public List<T> selectEntityListByPrimaryKeys(List<K> keys);
     
      
 }

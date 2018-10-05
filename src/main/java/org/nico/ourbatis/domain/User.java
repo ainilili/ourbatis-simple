@@ -28,24 +28,27 @@ public class User {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public User setId(Integer id) {
 		this.id = id;
+		return this;
 	}
 
 	public Integer getCityId() {
 		return cityId;
 	}
 
-	public void setCityId(Integer cityId) {
+	public User setCityId(Integer cityId) {
 		this.cityId = cityId;
+		return this;
 	}
 
 	public Integer getAge() {
 		return age;
 	}
 
-	public void setAge(Integer age) {
+	public User setAge(Integer age) {
 		this.age = age;
+		return this;
 	}
 
 	public String getName() {
@@ -60,8 +63,9 @@ public class User {
 		return address;
 	}
 
-	public void setAddress(String address) {
+	public User setAddress(String address) {
 		this.address = address;
+		return this;
 	}
 
 	public BigDecimal getBalance() {
@@ -70,6 +74,11 @@ public class User {
 
 	public void setBalance(BigDecimal balance) {
 		this.balance = balance;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + "]";
 	}
 
 }

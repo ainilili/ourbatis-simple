@@ -16,7 +16,7 @@
 		</ourbatis:foreach>
     </sql>
     
-    <select id="selectByPrimaryKey" parameterType="java.lang.Object" resultMap="BaseResultMap">
+    <select id="selectById" parameterType="java.lang.Object" resultMap="BaseResultMap">
         select 
         <include refid="Base_Column_List" />
         from @{tableName}
@@ -26,7 +26,7 @@
 		</ourbatis:foreach>
     </select>
     
-    <select id="selectByEntity" parameterType="@{domainClassName}" resultMap="BaseResultMap">
+    <select id="selectEntity" parameterType="@{domainClassName}" resultMap="BaseResultMap">
         select 
         <include refid="Base_Column_List" />
         from @{tableName}
@@ -39,7 +39,7 @@
         limit 1
     </select>
     
-    <select id="selectByEntityList" parameterType="@{domainClassName}" resultMap="BaseResultMap">
+    <select id="selectList" parameterType="@{domainClassName}" resultMap="BaseResultMap">
         select 
         <include refid="Base_Column_List" />
         from @{tableName}
@@ -51,7 +51,7 @@
 		</ourbatis:foreach>
     </select>
     
-    <select id="selectById" parameterType="@{domainClassName}" resultType="java.lang.String">
+    <select id="selectId" parameterType="@{domainClassName}" resultType="java.lang.Object">
         select 
         <ourbatis:foreach list="primaryColumns" var="elem" split=",">
 			`@{elem.jdbcName}`
@@ -66,7 +66,7 @@
          limit 1
     </select>
     
-    <select id="selectByIds" parameterType="@{domainClassName}" resultType="java.lang.String">
+    <select id="selectIds" parameterType="@{domainClassName}" resultType="java.lang.Object">
         select 
  		<ourbatis:foreach list="primaryColumns" var="elem" split=",">
 			`@{elem.jdbcName}`
@@ -80,7 +80,7 @@
 		</ourbatis:foreach>
     </select>
     
-    <delete id="deleteByPrimaryKey" parameterType="java.lang.Object">
+    <delete id="deleteById" parameterType="java.lang.Object">
         delete 
 		from @{tableName} 
 		where 1=1 
@@ -89,12 +89,10 @@
 		</ourbatis:foreach>
     </delete>
 	
-    <insert id="insert" parameterType="@{domainClassName}" >
+    <insert id="insert" keyProperty="@{primaryColumns.0.jdbcName}" useGeneratedKeys="true" parameterType="@{domainClassName}" >
         insert into @{tableName}
         (
-			<ourbatis:foreach list="allColumns" var="elem" split=",">
-		        `@{elem.jdbcName}`
-			</ourbatis:foreach>
+			<include refid="Base_Column_List"/>
         )
         values (
 			<ourbatis:foreach list="allColumns" var="elem" split="," >
@@ -103,10 +101,10 @@
         )
     </insert>
 	
-    <insert id="insertSelective" parameterType="@{domainClassName}" >
+    <insert id="insertSelective" keyProperty="@{primaryColumns.0.jdbcName}" useGeneratedKeys="true" parameterType="@{domainClassName}" >
         insert into @{tableName}
         (
-			<ourbatis:foreach list="primaryColumns" var="elem">
+			<ourbatis:foreach list="primaryColumns" var="elem" split=",">
 		            `@{elem.jdbcName}`
 			</ourbatis:foreach>
 			<ourbatis:foreach list="normalColumns" var="elem">
@@ -126,14 +124,27 @@
 			</ourbatis:foreach>
         )
     </insert>
-	
-    <update id="updateByPrimaryKey" parameterType="@{domainClassName}">
+    
+     <insert id="insertBatch" keyProperty="@{primaryColumns.0.jdbcName}" useGeneratedKeys="true" parameterType="java.util.List" >  
+        insert into @{tableName}
+        (
+			<include refid="Base_Column_List"/>
+        )
+        values 
+        <foreach collection="list" index="index" item="item" separator=",">  
+	        (
+		        <ourbatis:foreach list="allColumns" var="elem" split="," >
+					#{item.@{elem.javaName}}
+				</ourbatis:foreach>
+	        )
+        </foreach>
+    </insert>
+    
+    <update id="update" parameterType="@{domainClassName}">
         update @{tableName}
         <set>
-        <ourbatis:foreach list="normalColumns" var="elem" >
-			<if test="@{elem.javaName} != null" >
-	            `@{elem.jdbcName}` = #{@{elem.javaName}},
-	        </if>
+        <ourbatis:foreach list="normalColumns" var="elem" split=",">
+	          `@{elem.jdbcName}` = #{@{elem.javaName}}
 		</ourbatis:foreach>
         </set>
         where 1=1 
@@ -142,47 +153,47 @@
 		</ourbatis:foreach>
     </update>
     
-    <insert id="insertBatch" parameterType="java.util.List" >  
-        insert into @{tableName}
-        <trim prefix="(" suffix=")" suffixOverrides=",">
-			<ourbatis:foreach list="allColumns" var="elem" split=",">
-				<if test="@{elem.javaName} != null" >
-		            `@{elem.jdbcName}`
-		        </if>
+    <update id="updateSelective" parameterType="@{domainClassName}">
+        update @{tableName}
+        <set>
+	        <ourbatis:foreach list="primaryColumns" var="elem" split=",">
+			      `@{elem.jdbcName}` = #{@{elem.javaName}}
 			</ourbatis:foreach>
-        </trim>
-        values 
-        <foreach collection="list" index="index" item="item" separator=",">  
-	        <trim prefix="(" suffix=")" suffixOverrides=",">
-		        <ourbatis:foreach list="allColumns" var="elem" split="," >
-					#{item.@{elem.javaName}}
-				</ourbatis:foreach>
-	        </trim>
-        </foreach>
-    </insert>
-      
+	        <ourbatis:foreach list="normalColumns" var="elem">
+		          <if test="@{elem.javaName} != null" >
+		          ,`@{elem.jdbcName}` = #{@{elem.javaName}}
+		          </if>
+			</ourbatis:foreach>
+        </set>
+        where 1=1 
+        <ourbatis:foreach list="primaryColumns" var="elem" >
+			and `@{elem.jdbcName}` = #{@{elem.javaName}}
+		</ourbatis:foreach>
+    </update>
+    
     <update id="updateBatch" parameterType="java.util.List">  
         <foreach  collection="list" index="index" item="item"  separator=";">     
            update @{tableName}
-	        set 
-	        <ourbatis:foreach list="normalColumns" var="elem" >
-				`@{elem.jdbcName}` = #{item.@{elem.javaName}}
+	        <set>
+	        <ourbatis:foreach list="normalColumns" var="elem" split=",">
+		          `@{elem.jdbcName}` = #{item.@{elem.javaName}}
 			</ourbatis:foreach>
-	        where 
-	        <ourbatis:foreach list="primaryColumns" var="elem" split=" and ">
-				`@{elem.jdbcName}` = #{item.@{elem.javaName}}
+	        </set>
+	        where 1=1 
+	        <ourbatis:foreach list="primaryColumns" var="elem" >
+				and `@{elem.jdbcName}` = #{item.@{elem.javaName}}
 			</ourbatis:foreach>
         </foreach>
     </update>
 	
     <delete id="deleteBatch" parameterType="java.util.List"> 
-        delete from @{tableName} where id in
+        delete from @{tableName} where @{primaryColumns.0.jdbcName} in
         <foreach close=")" collection="list" index="index" item="item" open="(" separator=",">  
             #{item}  
         </foreach> 
     </delete>
  
-    <delete id="deleteByEntity" parameterType="@{domainClassName}"> 
+    <delete id="delete" parameterType="@{domainClassName}"> 
         delete from @{tableName} where  1 = 1
         <ourbatis:foreach list="allColumns" var="elem" >
 			<if test="@{elem.javaName} != null" >
