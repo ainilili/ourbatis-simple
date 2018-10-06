@@ -2,13 +2,16 @@ package org.nico.ourbatis.domain;
 
 import java.math.BigDecimal;
 
+import org.nico.ourbatis.annotation.MapperBy;
 import org.nico.ourbatis.annotation.RenderPrimary;
+import org.nico.ourbatis.mapper.UserMapper;
 
 /** 
  * User
  * 
  * @author nico
  */
+@MapperBy(UserMapper.class)
 public class User {
 
 	@RenderPrimary

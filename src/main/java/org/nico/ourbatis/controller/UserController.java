@@ -70,6 +70,10 @@ public class UserController {
 		user.setCityId(2);
 		user.setName("Nico");
 		
+		//自定义
+//		builder.append(userMapper.selectDefined() + System.lineSeparator());
+//		builder.append(userMapper.selectUserDefined() + System.lineSeparator());
+		
 		//插入
 		int modify = userMapper.insert(user);
 		builder.append("插入测试：" + modify + System.lineSeparator());
