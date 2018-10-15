@@ -1,3 +1,0 @@
-<select id="selectUserDefined" resultType="long">
-	select 2
-</select>
