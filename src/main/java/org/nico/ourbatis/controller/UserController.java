@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.nico.ourbatis.domain.User;
 import org.nico.ourbatis.entity.Page;
+import org.nico.ourbatis.entity.PageResult;
 import org.nico.ourbatis.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -93,8 +94,26 @@ public class UserController {
 		user = userMapper.selectEntity(new User().setAddress(user.getAddress()));
 		builder.append("实体查询测试：" + user + System.lineSeparator());
 		
-		List<User> users = userMapper.selectPage(Page.start(1L, 2L, new User()));
-		builder.append("分页查询测试：" + users + System.lineSeparator());
+		List<User> users = userMapper.selectPage(Page.start(1L, 2L));
+		builder.append("分页查询：" + users + System.lineSeparator());
+		
+		users = userMapper.selectPage(Page.start(1L, 2L, new User()));
+		builder.append("分页条件测试：" + users + System.lineSeparator());
+		
+		users = userMapper.selectPage(Page.start(1L, 2L, "age desc"));
+		builder.append("分页排序查询：" + users + System.lineSeparator());
+		
+		users = userMapper.selectPage(Page.start("age desc"));
+		builder.append("排序测试：" + users + System.lineSeparator());
+		
+		users = userMapper.selectPage(Page.start(1L, 2L,  new User().setName("Nico1"), "age desc"));
+		builder.append("分页条件排序查询：" + users + System.lineSeparator());
+		
+		users = userMapper.selectPage(Page.start(new User().setName("Nico1"), "age desc"));
+		builder.append("条件排序查询：" + users + System.lineSeparator());
+		
+		PageResult<User> pageResult = userMapper.selectPageResult(Page.start(1L, 2L,  new User().setName("Nico1"), "age desc"));
+		builder.append("ps查询：" + pageResult + System.lineSeparator());
 		
 		long count = userMapper.selectCount(new User());
 		builder.append("数量查询测试：" + count + System.lineSeparator());
