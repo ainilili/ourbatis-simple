@@ -1,4 +1,4 @@
-package org.nico.ourbatis.domain;
+package org.nico.ourbatis.domain.user;
 
 import java.math.BigDecimal;
 

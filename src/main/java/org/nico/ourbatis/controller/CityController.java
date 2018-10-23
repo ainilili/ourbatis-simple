@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.nico.ourbatis.domain.City;
+import org.nico.ourbatis.domain.city.City;
 import org.nico.ourbatis.mapper.CityMapper;
 import org.nico.ourbatis.mapper.CityMapper;
 import org.springframework.beans.factory.annotation.Autowired;

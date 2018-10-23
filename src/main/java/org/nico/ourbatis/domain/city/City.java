@@ -1,4 +1,4 @@
-package org.nico.ourbatis.domain;
+package org.nico.ourbatis.domain.city;
 
 import org.nico.ourbatis.annotation.RenderPrimary;
 

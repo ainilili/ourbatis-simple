@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import org.nico.ourbatis.domain.User;
+import org.nico.ourbatis.domain.user.User;
 import org.nico.ourbatis.entity.Page;
 import org.nico.ourbatis.entity.PageResult;
 import org.nico.ourbatis.mapper.UserMapper;
